@@ -1,7 +1,17 @@
 .App {
   font-family: sans-serif;
   text-align: center;
-  padding: 20px;
+  padding: 40px;
+}
+
+.Spice {
+  background-color: tan;
+  margin-right: 15px;
+  padding: 15px;
+}
+
+.Spice .delete {
+  margin-left: 10px;
 }
 
 .search {
