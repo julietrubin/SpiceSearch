@@ -1,0 +1,2 @@
+# SpiceSearch
+Created with CodeSandbox
