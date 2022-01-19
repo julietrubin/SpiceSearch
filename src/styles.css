@@ -1,4 +1,11 @@
 .App {
   font-family: sans-serif;
   text-align: center;
+  padding: 20px;
+}
+
+.search {
+  width: 300px;
+  padding: 10px;
+  margin: 15px;
 }
