@@ -3,29 +3,36 @@ import React from "react";
 import Spice from "./Spice.js";
 import "./styles.css";
 
+const ALPHA_REGEX = /[^A-Za-z]/g;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = { current: "",  spices: [""]};
-    this.state = { current: "", spices: ["chai", "pumpkin"] };
+    this.state = { current: "", spices: [] };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDeleteEntry = this.handleDeleteEntry.bind(this);
   }
 
-  handleKeyPress(event) {
-    if (event.charCode === 8) {
-      // delete
-      let current = event.target.value;
-      this.setState({ current });
-    }
-
-    let current = event.target.value; //this.state.current +
+  handleOnChange(event) {
+    let current = event.target.value;
+    // only allow alphanumeric characters
+    current = current.replace(ALPHA_REGEX, "");
     this.setState({ current });
+  }
+
+  handleKeyPress(event) {
+    let current = event.target.value;
     if (event.charCode === 13) {
       // enter
-      this.setState({ spices: [...this.state.spices, current] });
+      if (current) {
+      }
+      this.setState({
+        spices: [...this.state.spices, current],
+        current: ""
+      });
       event.preventDefault();
     }
     if (event.charCode === 40) {
@@ -42,8 +49,9 @@ class App extends React.Component {
   }
 
   handleDeleteEntry(index) {
-    alert(index);
-    this.setState({ spices: this.state.spices.splice(index, 1) });
+    let list = this.state.spices;
+    list.splice(index, 1);
+    this.setState({ spices: list });
   }
 
   render() {
@@ -62,8 +70,9 @@ class App extends React.Component {
             <input
               type="text"
               className="search"
-              value={this.state.value}
+              value={this.state.current}
               onKeyPress={this.handleKeyPress}
+              onChange={this.handleOnChange}
             ></input>
           </label>
           {/* <input type="submit" value="Submit" /> */}
