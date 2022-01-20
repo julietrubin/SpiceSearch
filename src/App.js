@@ -22,7 +22,6 @@ class App extends React.Component {
     // only allow alphanumeric characters
     current = current.replace(ALPHA_REGEX, "");
     this.setState({ current });
-    alert(SPICE_SUGGESTIONS);
   }
 
   handleKeyPress(event) {
@@ -81,6 +80,11 @@ class App extends React.Component {
           </label>
           {/* <input type="submit" value="Submit" /> */}
         </form>
+        <ul>
+          {SPICE_SUGGESTIONS.map((spice, index) => (
+            <li>{spice}</li>
+          ))}
+        </ul>
       </div>
     );
   }
