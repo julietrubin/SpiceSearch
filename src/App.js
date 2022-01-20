@@ -2,6 +2,7 @@ import React from "react";
 
 import Spice from "./Spice.js";
 import "./styles.css";
+import { SPICE_SUGGESTIONS } from "./constants.js";
 
 const ALPHA_REGEX = /[^A-Za-z]/g;
 
@@ -21,18 +22,21 @@ class App extends React.Component {
     // only allow alphanumeric characters
     current = current.replace(ALPHA_REGEX, "");
     this.setState({ current });
+    alert(SPICE_SUGGESTIONS);
   }
 
   handleKeyPress(event) {
     let current = event.target.value;
     if (event.charCode === 13) {
       // enter
-      if (current) {
+      if (current !== "") {
+        // must not be empty
+        this.setState({
+          spices: [...this.state.spices, current],
+          current: ""
+        });
       }
-      this.setState({
-        spices: [...this.state.spices, current],
-        current: ""
-      });
+
       event.preventDefault();
     }
     if (event.charCode === 40) {
