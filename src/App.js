@@ -1,6 +1,7 @@
 import React from "react";
 
-import Spice from "./Spice.js";
+import SelectedSpices from "./SelectedSpices";
+import Suggestions from "./Suggestions.js";
 import "./styles.css";
 import { SPICE_SUGGESTIONS } from "./constants.js";
 
@@ -9,7 +10,7 @@ const ALPHA_REGEX = /[^A-Za-z]/g;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: "", spices: [], suggestionIndex: null };
+    this.state = { current: "", selectedSpices: [], suggestionIndex: null };
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
@@ -20,7 +21,7 @@ class App extends React.Component {
 
   handleOnClickSuggestion(spice) {
     this.setState({
-      spices: [...this.state.spices, spice],
+      selectedSpices: [...this.state.selectedSpices, spice],
       current: "",
       suggestionIndex: null
     });
@@ -39,7 +40,7 @@ class App extends React.Component {
     }
     event.preventDefault();
 
-    // either suggested item or our own item
+    // either a suggested item or not
     let current =
       this.state.suggestionIndex === null
         ? event.target.value
@@ -48,7 +49,7 @@ class App extends React.Component {
     if (current !== "") {
       // must not be empty
       this.setState({
-        spices: [...this.state.spices, current],
+        selectedSpices: [...this.state.selectedSpices, current],
         current: "",
         suggestionIndex: null
       });
@@ -84,22 +85,18 @@ class App extends React.Component {
   }
 
   handleDeleteEntry(index) {
-    let list = this.state.spices;
+    let list = this.state.selectedSpices;
     list.splice(index, 1);
-    this.setState({ spices: list });
+    this.setState({ selectedSpices: list });
   }
 
   render() {
     return (
       <div className="App">
-        {this.state.spices.map((spice, index) => (
-          <Spice
-            key={index}
-            name={spice}
-            index={index}
-            handleDeleteEntry={this.handleDeleteEntry}
-          />
-        ))}
+        <SelectedSpices
+          selectedSpices={this.state.selectedSpices}
+          handleDeleteEntry={this.handleDeleteEntry}
+        />
         <form onSubmit={this.handleSubmit}>
           <label>
             <input
@@ -112,16 +109,11 @@ class App extends React.Component {
           </label>
           {/* <input type="submit" value="Submit" /> */}
         </form>
-        <ul className="suggestions">
-          {SPICE_SUGGESTIONS.map((spice, index) => (
-            <li
-              onClick={() => this.handleOnClickSuggestion(spice)}
-              className={this.state.suggestionIndex === index ? "selected" : ""}
-            >
-              {spice}
-            </li>
-          ))}
-        </ul>
+        <Suggestions
+          current={this.state.current}
+          suggestionIndex={this.state.suggestionIndex}
+          handleOnClickSuggestion={this.handleOnClickSuggestion}
+        />
       </div>
     );
   }
