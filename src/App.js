@@ -30,7 +30,7 @@ class App extends React.Component {
     let current = event.target.value;
     // only allow alphanumeric characters
     current = current.replace(ALPHA_REGEX, "");
-    this.setState({ current });
+    this.setState({ current, suggestionIndex: null });
   }
 
   handleKeyEnter(event) {

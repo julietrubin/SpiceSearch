@@ -15,14 +15,16 @@
 }
 
 .search {
-  width: 300px;
+  width: 515px;
   padding: 10px;
-  margin: 15px;
+  margin-top: 20px;
 }
 
 .suggestions {
   background-color: grey;
   padding: 20px;
+  width: 500px;
+  margin: 20px auto;
 }
 
 .suggestions li {
