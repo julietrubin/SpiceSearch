@@ -19,3 +19,19 @@
   padding: 10px;
   margin: 15px;
 }
+
+.suggestions {
+  background-color: grey;
+  padding: 20px;
+}
+
+.suggestions li {
+  text-align: left;
+  list-style: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions li.selected {
+  background-color: red;
+}

@@ -9,12 +9,21 @@ const ALPHA_REGEX = /[^A-Za-z]/g;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: "", spices: [] };
+    this.state = { current: "", spices: [], suggestionIndex: null };
 
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDeleteEntry = this.handleDeleteEntry.bind(this);
+    this.handleOnClickSuggestion = this.handleOnClickSuggestion.bind(this);
+  }
+
+  handleOnClickSuggestion(spice) {
+    this.setState({
+      spices: [...this.state.spices, spice],
+      current: "",
+      suggestionIndex: null
+    });
   }
 
   handleOnChange(event) {
@@ -24,26 +33,49 @@ class App extends React.Component {
     this.setState({ current });
   }
 
-  handleKeyPress(event) {
-    let current = event.target.value;
-    if (event.charCode === 13) {
-      // enter
-      if (current !== "") {
-        // must not be empty
-        this.setState({
-          spices: [...this.state.spices, current],
-          current: ""
-        });
-      }
+  handleKeyEnter(event) {
+    if (event.keyCode !== 13) {
+      return;
+    }
+    event.preventDefault();
 
-      event.preventDefault();
+    // either suggested item or our own item
+    let current =
+      this.state.suggestionIndex === null
+        ? event.target.value
+        : SPICE_SUGGESTIONS[this.state.suggestionIndex];
+
+    if (current !== "") {
+      // must not be empty
+      this.setState({
+        spices: [...this.state.spices, current],
+        current: "",
+        suggestionIndex: null
+      });
     }
-    if (event.charCode === 40) {
-      // down
+  }
+
+  handleKeyUpAndDown(event) {
+    if (event.keyCode !== 40 && event.keyCode !== 38) {
+      return;
     }
-    if (event.charCode === 38) {
-      // up
+
+    let suggestionIndex = this.state.suggestionIndex;
+    if (event.keyCode === 40) {
+      if (suggestionIndex === null) {
+        suggestionIndex = 0;
+      } else if (suggestionIndex < SPICE_SUGGESTIONS.length) {
+        suggestionIndex++;
+      }
+    } else if (event.keyCode === 38 && suggestionIndex > 0) {
+      suggestionIndex--;
     }
+    this.setState({ suggestionIndex });
+  }
+
+  handleKeyDown(event) {
+    this.handleKeyEnter(event);
+    this.handleKeyUpAndDown(event);
   }
 
   handleSubmit(event) {
@@ -74,15 +106,20 @@ class App extends React.Component {
               type="text"
               className="search"
               value={this.state.current}
-              onKeyPress={this.handleKeyPress}
+              onKeyDown={this.handleKeyDown}
               onChange={this.handleOnChange}
             ></input>
           </label>
           {/* <input type="submit" value="Submit" /> */}
         </form>
-        <ul>
+        <ul className="suggestions">
           {SPICE_SUGGESTIONS.map((spice, index) => (
-            <li>{spice}</li>
+            <li
+              onClick={() => this.handleOnClickSuggestion(spice)}
+              className={this.state.suggestionIndex === index ? "selected" : ""}
+            >
+              {spice}
+            </li>
           ))}
         </ul>
       </div>
