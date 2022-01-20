@@ -1,14 +1,13 @@
 import "./styles.css";
-import { SPICE_SUGGESTIONS } from "./constants.js";
 
 export default function Suggestions(props) {
-  if (props.current === "") {
+  if (props.suggestedSpices.length === 0) {
     return <></>;
   }
 
   return (
     <ul className="suggestions">
-      {SPICE_SUGGESTIONS.map((spice, index) => (
+      {props.suggestedSpices.map((spice, index) => (
         <li
           onClick={() => props.handleOnClickSuggestion(spice)}
           className={props.suggestionIndex === index ? "selected" : ""}

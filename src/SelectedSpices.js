@@ -8,7 +8,7 @@ export default function SelectedSpices(props) {
           key={index}
           name={spice}
           index={index}
-          handleDeleteEntry={props.handleDeleteEntry}
+          handleDeleteSelectedSpices={props.handleDeleteSelectedSpices}
         />
       ))}
     </div>
@@ -21,7 +21,7 @@ function Spice(props) {
       {props.name}
       <button
         onClick={() => {
-          props.handleDeleteEntry(props.index);
+          props.handleDeleteSelectedSpices(props.index);
         }}
       >
         x

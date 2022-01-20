@@ -2,20 +2,25 @@ import React from "react";
 
 import SelectedSpices from "./SelectedSpices";
 import Suggestions from "./Suggestions.js";
+import { SPICE_SUGGESTIONS, ALPHA_REGEX } from "./constants.js";
 import "./styles.css";
-import { SPICE_SUGGESTIONS } from "./constants.js";
-
-const ALPHA_REGEX = /[^A-Za-z]/g;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: "", selectedSpices: [], suggestionIndex: null };
+    this.state = {
+      current: "",
+      selectedSpices: [],
+      suggestionIndex: null,
+      suggestedSpices: []
+    };
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDeleteEntry = this.handleDeleteEntry.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDeleteSelectedSpices = this.handleDeleteSelectedSpices.bind(
+      this
+    );
     this.handleOnClickSuggestion = this.handleOnClickSuggestion.bind(this);
   }
 
@@ -23,7 +28,8 @@ class App extends React.Component {
     this.setState({
       selectedSpices: [...this.state.selectedSpices, spice],
       current: "",
-      suggestionIndex: null
+      suggestionIndex: null,
+      suggestedSpices: []
     });
   }
 
@@ -31,7 +37,14 @@ class App extends React.Component {
     let current = event.target.value;
     // only allow alphanumeric characters
     current = current.replace(ALPHA_REGEX, "");
-    this.setState({ current, suggestionIndex: null });
+    let suggestedSpices = SPICE_SUGGESTIONS.filter((spice) =>
+      spice.toLowerCase().startsWith(current.toLowerCase())
+    );
+    this.setState({
+      current,
+      suggestionIndex: null,
+      suggestedSpices
+    });
   }
 
   handleKeyEnter(event) {
@@ -44,14 +57,15 @@ class App extends React.Component {
     let current =
       this.state.suggestionIndex === null
         ? event.target.value
-        : SPICE_SUGGESTIONS[this.state.suggestionIndex];
+        : this.state.suggestedSpices[this.state.suggestionIndex];
 
     if (current !== "") {
       // must not be empty
       this.setState({
         selectedSpices: [...this.state.selectedSpices, current],
         current: "",
-        suggestionIndex: null
+        suggestionIndex: null,
+        suggestedSpices: []
       });
     }
   }
@@ -65,7 +79,7 @@ class App extends React.Component {
     if (event.keyCode === 40) {
       if (suggestionIndex === null) {
         suggestionIndex = 0;
-      } else if (suggestionIndex < SPICE_SUGGESTIONS.length) {
+      } else if (suggestionIndex < this.state.suggestedSpices.length) {
         suggestionIndex++;
       }
     } else if (event.keyCode === 38 && suggestionIndex > 0) {
@@ -84,7 +98,7 @@ class App extends React.Component {
     //event.preventDefault();
   }
 
-  handleDeleteEntry(index) {
+  handleDeleteSelectedSpices(index) {
     let list = this.state.selectedSpices;
     list.splice(index, 1);
     this.setState({ selectedSpices: list });
@@ -95,7 +109,7 @@ class App extends React.Component {
       <div className="App">
         <SelectedSpices
           selectedSpices={this.state.selectedSpices}
-          handleDeleteEntry={this.handleDeleteEntry}
+          handleDeleteSelectedSpices={this.handleDeleteSelectedSpices}
         />
         <form onSubmit={this.handleSubmit}>
           <label>
@@ -111,6 +125,7 @@ class App extends React.Component {
         </form>
         <Suggestions
           current={this.state.current}
+          suggestedSpices={this.state.suggestedSpices}
           suggestionIndex={this.state.suggestionIndex}
           handleOnClickSuggestion={this.handleOnClickSuggestion}
         />

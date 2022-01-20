@@ -1,3 +1,5 @@
+export const ALPHA_REGEX = /[^A-Za-z]/g;
+
 export const SPICE_SUGGESTIONS = [
   "Adobo Seasoning",
   "Aji Amarillo Chile Powder",
